@@ -1,1 +1,1 @@
-web: node asdfapp.js
+web: node app.js
