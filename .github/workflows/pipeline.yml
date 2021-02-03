@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  lint_pipeline_asdf:
+  simple_deployment_pipeline:
     runs_on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
