@@ -9,7 +9,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-    deploy:
+  deploy:
     if: ${{ github.event_name == 'push' && contains(join(github.event.commits.*.message), 'asdf' ) }}
     runs-on: ubuntu-18.04
     steps:
