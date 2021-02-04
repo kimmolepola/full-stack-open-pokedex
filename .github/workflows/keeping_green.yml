@@ -9,19 +9,21 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  a_test_job:
+  deploy:
+    if: ${{ github.event_name == 'push' && contains(join(toJson(github.event.commits.*.message)), 'asdf' ) }}
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
-      - name: gihub context
+      - uses: akhileshns/heroku-deploy@v3.9.9 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "kimmolepola-pokedex" #Must be unique in Heroku
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+          healthcheck: "https://kimmolepola-pokedex.herokuapp.com/health"
+          checkstring: "ok"
+          rollbackonhealthcheckfailed: true
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.33.0
         env:
-          GITHUB_CONTEXT: ${{ github }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: commits
-        env:
-          COMMITS: ${{ github.event.commits }}
-        run: echo "$COMMITS"
-      - name: commit messages
-        env:
-          COMMIT_MESSAGES: ${{ github.event.commits.*.message }}
-        run: echo "$COMMIT_MESSAGES"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
