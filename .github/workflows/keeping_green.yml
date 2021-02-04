@@ -1,4 +1,4 @@
-name: green
+name: main
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  hello_world_job:
+  deploy:
     if: ${{ github.event_name == 'push'}}
     runs-on: ubuntu-18.04
     steps:
@@ -22,3 +22,9 @@ jobs:
           healthcheck: "https://kimmolepola-pokedex.herokuapp.com/health"
           checkstring: "ok"
           rollbackonhealthcheckfailed: true
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.33.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+          
