@@ -10,8 +10,9 @@ on:
 
 jobs:
   deploy:
-    if: ${{ github.event_name == 'push'}}
-    if: ${{ cointains(join(github.event.commits.*.message), "#skip" ) }}
+    if: |
+      ${{ github.event_name == 'push'}} ||
+      ${{ cointains(join(github.event.commits.*.message), "#skip" ) }}
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
