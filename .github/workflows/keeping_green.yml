@@ -39,7 +39,7 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.9.9 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "kimmolepola-pokedex" #Must be unique in Heroku
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME}} #Must be unique in Heroku
           heroku_email: ${{secrets.HEROKU_EMAIL}}
           healthcheck: "https://kimmolepola-pokedex.herokuapp.com/health"
           checkstring: "ok"
@@ -51,8 +51,22 @@ jobs:
           DEFAULT_BUMP: patch
       - uses: 8398a7/action-slack@v3
         with:
+          status: custom
+          fields: workflow,job,commit,repo,ref,author,took
+          custom_payload: |
+            {
+              attachments: [{
+                color: 'good',
+                text: `a new version deployed to https://${{secrets.HEROKU_APP_NAME}}.herokuapp.com/ (${process.env.AS_COMMIT}) by ${process.env.AS_AUTHOR} build took ${process.env.AS_TOOK}`,
+              }]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+        if: ${{ success() }}
+      - uses: 8398a7/action-slack@v3
+        with:
           status: ${{ job.status }}
           fields: repo,message,commit,author,action,eventName,ref,workflow,job,took # selectable (default: repo,message)
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
-        if: ${{ success() || failure() }}
+        if: ${{ failure() }}
