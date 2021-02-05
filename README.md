@@ -1,4 +1,4 @@
-# Link to other repo
+# Link to other repository
 
 for assignment "11.21 Your own pipeline"
 
