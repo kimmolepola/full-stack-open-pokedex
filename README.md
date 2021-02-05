@@ -1,3 +1,9 @@
+# Link to other repo
+
+for assignment "11.21 Your own pipeline"
+
+https://github.com/kimmolepola/bloglist-pipeline-exercise
+
 # Full Stack open CI/CD
 
 This repository is used for the CI/CD module of the Full stack open course
